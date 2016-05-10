@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "coffee-json-dsl-cfn plugin to support Runlevel of stack resources.",
   "main": "src/coffee-json-dsl-cfn-runlevel.js",
-  "private": true,
   "scripts": {
     "test": "jasmine"
   },
