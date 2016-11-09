@@ -24,6 +24,10 @@ Resources.TestLambda=
         Ref: 'BucketName'
       S3Key: 'example-lambda.zip'
 
+Resources.ComplexConditionLambda=
+  Type: 'AWS::Lambda::Function'
+  Condition: $.equals($.ref('BucketName'), 'example-bucket')
+
 Outputs.LambdaArn=
   Value: $.getAtt('TestLambda', 'Arn')
 

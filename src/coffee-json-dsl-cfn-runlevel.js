@@ -24,12 +24,17 @@ module.exports = function(options) {
         let minRunlevel = this[Runlevel];
         [part.Resources, part.Outputs].forEach(elements => {
           for (let key in elements) {
-            if (typeof elements[key].Condition === 'string') {
-              if (!elements[key].Condition.startsWith('MinRunlevel')) {
-                elements[key].Condition = this.registerCondition(this.and(elements[key].Condition, `MinRunlevel${minRunlevel}`));
-              }
-            } else {
+            if (typeof elements[key].Condition === 'undefined'){
               elements[key].Condition = `MinRunlevel${minRunlevel}`;
+            } else {
+              if(!isRunlevelCondition(elements[key].Condition)) {
+                elements[key].Condition = this.registerCondition(
+                  this.and(
+                    elements[key].Condition,
+                    `MinRunlevel${minRunlevel}`
+                  )
+                );
+              }
             }
           }
         });
@@ -52,4 +57,8 @@ module.exports = function(options) {
       }
     }
   }
+}
+
+function isRunlevelCondition(condition) {
+  return typeof condition === 'string' && condition.startsWith('MinRunlevel');
 }

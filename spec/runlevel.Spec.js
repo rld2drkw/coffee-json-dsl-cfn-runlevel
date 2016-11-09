@@ -42,15 +42,26 @@ describe('runlevel', function() {
     });
 
     it('merges existing Condtion with MinRunlevel condition', function() {
-      let mergedConditionName = Object.keys(templateObj.Conditions)
-        .filter(condition => !condition.startsWith('MinRunlevel'))
-        .filter(condition => condition !== 'IsValidBucketName')[0];
-
+      let mergedConditionName = templateObj.Resources.MyCustomResource.Condition;
       expect(mergedConditionName).toBeDefined();
-      expect(templateObj.Resources.MyCustomResource.Condition).toEqual(mergedConditionName);
 
       let mergedCondition = templateObj.Conditions[mergedConditionName];
+      expect(mergedCondition).toBeDefined();
       expect(mergedCondition).toEqual({'Fn::And': [{'Condition':'IsValidBucketName'}, {'Condition': 'MinRunlevel1'}]});
+    });
+
+    it('merges existing complex condition with MinRunlevel condition', function() {
+      let mergedConditionName = templateObj.Resources.ComplexConditionLambda.Condition;
+      expect(mergedConditionName).toBeDefined();
+
+      let mergedCondition = templateObj.Conditions[mergedConditionName];
+      expect(mergedCondition).toBeDefined();
+      expect(mergedCondition).toEqual({
+        'Fn::And': [
+          {'Fn::Equals': [{Ref: 'BucketName'}, 'example-bucket']},
+          {Condition: 'MinRunlevel1'}
+        ]
+      });
     });
   });
 });
